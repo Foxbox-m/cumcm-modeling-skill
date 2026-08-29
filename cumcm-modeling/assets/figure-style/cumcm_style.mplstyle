@@ -1,0 +1,26 @@
+# Matplotlib stylesheet for CUMCM Award-Winning Paper Visuals
+axes.unicode_minus: False
+
+font.size: 10.5
+axes.titlesize: 11.0
+axes.labelsize: 10.5
+xtick.labelsize: 9.0
+ytick.labelsize: 9.0
+legend.fontsize: 9.0
+figure.titlesize: 12.0
+
+lines.linewidth: 1.5
+lines.markersize: 5.0
+
+axes.grid: False
+grid.alpha: 0.3
+grid.linestyle: --
+grid.linewidth: 0.6
+axes.edgecolor: 333333
+axes.linewidth: 0.8
+axes.prop_cycle: cycler('color', ['0072B2', 'E69F00', '009E73', 'CC79A7'])
+
+figure.dpi: 300
+savefig.dpi: 300
+savefig.bbox: tight
+savefig.pad_inches: 0.05

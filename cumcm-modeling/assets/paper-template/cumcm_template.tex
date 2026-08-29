@@ -1,0 +1,179 @@
+\documentclass[12pt,a4paper]{ctexart}
+% 建议使用 XeLaTeX 编译中文论文。
+% CUMCM profile 使用单栏；不要添加任何分栏选项或分栏环境。
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{geometry}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{listings}
+
+% 官方硬性基线（2026）：A4；页边距至少 2.5 cm；摘要原则上单独一页；
+% 正文不设目录且不超过 30 页；电子论文文件不超过 20 MB。
+\geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+
+% 以下字体、字号和行距是风格默认，不宣称为官方统一要求。
+\IfFontExistsTF{SimSun}{\setCJKmainfont{SimSun}}{\IfFontExistsTF{FandolSong}{\setCJKmainfont{FandolSong}}{\setCJKmainfont{Noto Serif CJK SC}}}
+\IfFontExistsTF{SimHei}{\setCJKsansfont{SimHei}}{\IfFontExistsTF{FandolHei}{\setCJKsansfont{FandolHei}}{\setCJKsansfont{Noto Sans CJK SC}}}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\IfFontExistsTF{TeX Gyre Termes}{\setmainfont{TeX Gyre Termes}}{\setmainfont{Liberation Serif}}}
+\AtBeginDocument{\zihao{-4}\setlength{\parindent}{2em}}
+\linespread{1.25}
+\pagestyle{plain} % plain 页脚居中；摘要页从 1 起连续编号
+\lstset{
+  basicstyle=\ttfamily\small,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=6pt,
+  frame=single,
+  framesep=3pt,
+  breaklines=true,
+  breakatwhitespace=false,
+  showstringspaces=false,
+  columns=fullflexible,
+  keepspaces=true,
+  upquote=true
+}
+\ctexset{
+  section/format=\centering\heiti\zihao{4},
+  section/number=\chinese{section},
+  section/name={,、},
+  subsection/format=\raggedright\heiti\zihao{-4},
+  subsubsection/format=\raggedright\heiti\zihao{-4}
+}
+\captionsetup[table]{font={small},labelfont=bf,textfont=normalfont,skip=5pt,position=top}
+\captionsetup[figure]{font={small},labelfont=bf,textfont=normalfont,skip=5pt,position=bottom}
+
+% 仅用于模板编译和占位审计；正式提交前必须全部替换并移除占位标记。
+\newcommand{\placeholder}[1]{\textcolor{gray}{\textbf{[请替换：#1]}}}
+
+\begin{document}
+
+% 摘要页：建议在最终版式中保持摘要原则上不超过一页。
+\begin{center}
+    {\zihao{3}\heiti \textbf{\placeholder{论文题目：方法/问题对象}}}\\[1.5em]
+    {\large \textbf{摘 \quad 要}}\\[1em]
+\end{center}
+
+\placeholder{总体段：直入问题对象、数据/机理基础、总体目标和模型体系；不要复述题面背景或堆叠空泛评价。}\par
+
+% <CUMCM-QUESTIONS:ABSTRACT>
+\placeholder{针对问题一：按困难→模型/关键求解→正式结果→一句现象/机制组织，只保留一项关键验证，并给出可核对的量化结果或结构性结论。}\par
+% </CUMCM-QUESTIONS:ABSTRACT>
+
+\vspace{1.5em}
+\noindent \textbf{关键词}：\placeholder{对象词；核心模型词；求解/验证词}
+
+\newpage
+
+% 正文从此处开始。官方通常要求正文不设目录并控制在规定页数内；提交前以当年通知为准。
+\section{问题重述}
+\subsection{问题背景}
+\placeholder{用自己的话概括现实对象、决策目标或观测任务。}
+
+\subsection{问题要求}
+\begin{enumerate}
+% <CUMCM-QUESTIONS:REQUIREMENTS>
+    \item \placeholder{问题一：只重述本问输入、输出、硬约束和交付量，不提前给出模型或答案。}
+% </CUMCM-QUESTIONS:REQUIREMENTS>
+\end{enumerate}
+
+\section{问题分析}
+% <CUMCM-QUESTIONS:ANALYSIS>
+\subsection{问题一的分析（按题面替换）}
+\placeholder{第一自然句直接说明问题一的对象、动作或输出；先判断 Cascade/Parallel/Hybrid（级联/并列/混合），再按真实关系说明困难、数学表示、求解路线以及结果与验证出口，不能只列算法名。}
+% </CUMCM-QUESTIONS:ANALYSIS>
+
+% 仅在技术路线图承担依赖论证时取消下列注释；布局按论证目的和最终版心选择。
+% \begin{figure}[H]
+% \centering
+% \includegraphics[width=\linewidth]{figures/roadmap.pdf}
+% \caption{问题分解与建模技术路线图}
+% \label{fig:roadmap}
+% \end{figure}
+
+\section{模型假设}
+\begin{enumerate}
+    \item \placeholder{只保留全局共享且影响模型成立性的假设，并说明简化影响；局部假设在首次使用处解释。}
+\end{enumerate}
+
+\section{符号说明}
+\begin{table}[H]
+\centering
+\caption{主要符号说明}
+\begin{tabular}{ccc}
+\toprule
+符号 & 含义 & 单位 \\
+\midrule
+\placeholder{$x$} & \placeholder{物理含义} & \placeholder{单位} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% 题面具有显式问题数 N 时，使用：
+% python3 cumcm-modeling/scripts/build/generate_paper_scaffold.py --profile cumcm --questions N --format tex --output PATH
+% 生成并展开摘要、1.2、2.N、5.N 与附录题号入口。
+% 题面没有显式题号时，按对象/机制/决策/验证等语义任务人工调整，不臆造 N 或问题编号。
+% 以下单问内容是 canonical 默认 N=1 的可编译起点。
+\section{模型的建立与求解}
+% 若多问共享同一模型，可在此处先定义共享关系，但不能另设“模型准备”一级章。
+% 共享核心准入（隐藏提示）：只有同时服务至少两问、能被后续直接调用、且前置定义可减少重复并不引入单问细节时，才在第五章开头定义；否则随对应 5.N 局部建立。
+% <CUMCM-QUESTIONS:MODELS>
+\subsection{问题一的模型建立与求解（按题面替换）}
+\placeholder{填写：最短充分直觉引线、目标/输入、模型、求解、正式结果、结果现象/机制、必要局部验证与直接作答。}
+\placeholder{复核：真实 Cascade/Parallel/Hybrid（级联/并列/混合）关系、基线缺口、活跃约束、局部简化依据与实现一致性。}
+\subsubsection{模型建立：请替换为当前题的数学对象、关系或约束标题}
+\placeholder{从现象或短直觉立即进入数学对象、关系或约束；纯解析、极短或真实级联任务可与相邻功能层合并。}
+\subsubsection{求解与计算结果：请替换为当前题的求解动作或结果标题}
+\placeholder{交代求解设置与正式结果，并解释结果对应的题目现象或主导机制；算法名称不能替代模型和适配理由。}
+\subsubsection{结果分析与局部检验：请替换为当前题的证据或边界标题}
+\placeholder{仅在风险尚未关闭时保留足以关闭主要风险的必要局部验证；若不同主要风险需要不同证据，分别保留。局部简化依据放在首次依赖处，最后直接回答题面。}
+% </CUMCM-QUESTIONS:MODELS>
+% 详细写作提示（默认隐藏，不构成固定小节）：Fast Narrative Lead 先给最短充分现象/直觉；Phase A 对每个 2.N/5.N 一次完成“现象→直觉→数学→求解→正式结果→现象/机制→必要局部验证→直接作答”，仅在风险尚未关闭时保留足以关闭主要风险的必要局部验证，若不同主要风险需要不同证据，分别保留；随后 Phase B 只做一次全文读取；完整论文或最终交付时，Competition Paper Voice 与 Claim Calibration 不以用户额外点名为前提，但仍仅处理实际观察到的问题；Caveat/限定语也仅处理本次全文扫描发现的问题，所有维度均不机械执行无问题项；局部任务只归类当前任务范围内实际观察到的问题。合并清单后一次局部修复并只复验受影响维度；Semantic Emphasis 仅在发现具体语义导航缺口，或最终正式交付确需扫读导航时启用，局部语态/限定语清理不得自动增加或调整粗体。先判断 Cascade/Parallel/Hybrid：只有真实级联才写传递关系与增量，并列任务写独立对象/场景/困难/表示/验证出口，混合任务只写真实共享核心与接口。公式、label、cite key、图表路径、正式数值、单位、冻结参数、硬约束和 LaTeX 结构受保护；若数字或公式需要改变，回到事实源。
+% 主模型要展开结构困难与关系来源、相对最小基线所需的机制及参数/约束来源与主导因素；自然完成“目标与输出→输入与来源→数学关系/数学结构/模型→推导与求解→量化结果→机制解释与局部验证→直接作答”，并说明选择理由、参数/假设/单位/可辨识性和适用条件。求解/离散设置交代初值/随机性、停止准则、容差、成本与失败/降级路径；结果先按“结果→题目现象/状态→主导变量/约束/几何/机理→题意”解释，仅在风险尚未关闭时保留足以关闭主要风险的必要局部验证，若不同主要风险需要不同证据，分别保留；局部验证/不确定性按上述风险口径处理；局部简化依据留在首次依赖处，最后用 1—2 句直接回答题面并写清下一任务接口。复核基线归因、活跃约束解释、声明模型与实际实现一致、离散/步长/收敛依据。
+% 复核基线归因、活跃约束解释、声明模型与实际实现一致、离散/步长/收敛依据。
+% runID、JSON、checker、manifest 等工程追踪字段属于支撑材料/审计，不进入正文。
+
+% 公式指导：一个独立公式/等式链承担一个论证动作并单独成行；公式前写依据或目的，
+% 公式后解释符号、单位、参数来源和后续作用。多个约束或联立关系用 cases/aligned
+% 配合左大括号分行。代码输入/展示命令只能放在附录，不得放入正文。
+
+\section{模型的分析与检验}
+\placeholder{只汇总跨问题、系统级或共同风险的检验；二级标题按实际检验方法命名。每问局部验证仍放在对应 5.N 结果附近。}
+
+\section{模型的评价}
+\subsection{模型的优点}
+\placeholder{优点必须回指已经展示的模型结构、结果或验证证据。}
+\subsection{模型的缺点与改进}
+\placeholder{先集中列出由结果暴露的整体局限、触发条件与影响方向，再统一提出可执行改进；公式成立所需的局部简化依据留在首次依赖处，避免重复免责。}
+
+% 当前 2026 规则要求所有参赛队声明；未来届次先复核规则。声明不进入论文编号章节。
+\section*{AI 工具使用声明}
+\placeholder{按当届规则和实际使用情况如实填写，并与支撑材料一致。}
+
+\begin{thebibliography}{99}
+\bibitem{example} \placeholder{按实际核验过的来源填写作者、题名、来源、年份和页码。}
+\end{thebibliography}
+
+\newpage
+\appendix
+\section*{附录}
+\addcontentsline{toc}{section}{附录}
+% <CUMCM-QUESTIONS:APPENDIX>
+\subsection*{附录 A：问题一求解程序及说明}
+\placeholder{先说明本问特异核心函数/函数签名和主求解逻辑，并交代对应正文 5.1 节的输入、输出和功能；再纳入完整执行源文件，不得手抄、删行、简化或只放文件索引。}
+% \lstinputlisting[language=Python]{../src/q1.py}
+% </CUMCM-QUESTIONS:APPENDIX>
+
+% <CUMCM-QUESTIONS:APPENDIX-SHARED>
+\subsection*{附录 B：公共函数与共享模块}
+\placeholder{在各问特异核心逻辑之后只后置一次共享完整代码；列各问题实际调用的公共函数和共享模块，并说明题号到入口脚本的对应关系。}
+
+\subsection*{附录 C：提交支撑材料文件清单}
+\placeholder{只列真正提交的题目代码、共享函数、结果文件和必要数据；不列项目简报、内部账本、检查日志、QA 预览或内部清单。}
+% </CUMCM-QUESTIONS:APPENDIX-SHARED>
+
+\end{document}

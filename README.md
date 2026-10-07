@@ -1,26 +1,33 @@
 # CUMCM 数学建模 Skill
 
-一个面向 Codex 的证据驱动型 CUMCM（全国大学生数学建模竞赛）建模 Skill。它把赛题理解、数据审计、数学表示、候选模型、实际求解、验证、图表和论文交付串成一条可追溯流程。
+一个面向 Codex 的证据驱动型 CUMCM（全国大学生数学建模竞赛）建模 Skill。它把赛题理解、数据审计、数学表示、候选模型、实际求解、验证与 G3 建模交接大纲串成一条可追溯流程。
 
 ## 能做什么
 
 - 从题面和附件提取研究对象、变量、任务、约束、数据与交付要求；
-- 先独立推导，再按需使用数学原语、模型卡和可选的外部历史资料；
+- 先独立推导，再按需使用内置蒸馏规则、数学原语、模型卡和经核验的外部公开来源；
 - 审计 CSV/XLSX 数据，识别缺失、重复、异常、单位、时间切分和潜在泄漏；
 - 支持优化、预测、统计学习、机理仿真、评价决策等路线，并保留可解释的基线；
-- 运行可复现清单，检查结果、图件、论文结构、引用、附录和提交边界；
-- 按当前题目证据组织摘要、正文、图表、LaTeX/Word 骨架和 AI 使用声明。
+- 完整建模在正式实现前生成 `preliminary-modeling-report.md`，经 G1-H 人工 `APPROVED` 或用户明确跳过后再继续；
+- 运行可复现清单，检查计算结果、指标输出与 figure-ready 数据资产；
+- 完整计算与结果分析在 G2 结束时生成 `G2-H_data_review.md`，经 G2-H 人工 `APPROVED` 并冻结事实后，进入 G3 阶段；
+- G3 阶段生成 `PROJECT_ROOT/paper-outline.md` 作为建模交接大纲，覆盖全局问题链、逐问模型/算法/结果/验证、真实跨问关系、证据索引，以及仅在必要时保留的可视化意图；不输出论文语态、章节结构或视觉样式。
 
 Skill 不会凭空生成数据、结果、引用或奖级，也不保证模型正确、论文获奖或符合某一届最新规则。正式数字必须来自当前项目中实际执行且可追溯的输出；规则、题面和用户要求优先于历史经验。
 
 ## 工作主线
 
 ```text
-题面与数据 → 数学对象与假设 → 候选模型与基线 → 求解与实际运行
-        → 验证、敏感性与边界 → 结果与图表 → 论文与提交审计
+题面与数据 → 数学对象与假设 → 候选模型与基线 → 模型定式与验证计划
+        → preliminary-modeling-report.md → G1-H 人工审查/明确跳过
+        → G1 正式实现与运行 → 验证、敏感性与边界 → 结构化结果资产
+        → G2-H 数据事实审查（G2-H_data_review.md）→ 人工 APPROVED 与事实冻结
+        → G3 建模交接大纲综合（paper-outline.md）
 ```
 
-默认先完成当前题的独立结构推导，再按具体缺口读取参考资料。外部论文库不是运行前置条件；只有明确需要来源追溯、历史失败案例、方案比较或精确页码时，才显式提供外部 `CORPUS_ROOT`。
+默认先完成当前题的独立结构推导，再按具体缺口读取内置参考。只有理论来源、历史失败案例、方案比较或精确出处会改变论证时，才按需检索并核验外部公开来源。
+
+G1-H 是 G1 内的人工子门，G2-H 是 G2 内的人工子门；完整任务在人工报告 `PENDING` 时暂停后续步骤。正式论文写作、视觉设计和提交格式由下游独立 Skill 处理。
 
 ## 发布内容
 
@@ -31,12 +38,12 @@ cumcm-modeling-skill/
 └── cumcm-modeling/
     ├── SKILL.md                 # Skill 入口与任务路由
     ├── agents/openai.yaml       # Codex 显示名和默认提示词
-    ├── references/              # 规则、工作流、模型、验证、写作与排版资料
-    ├── assets/                  # LaTeX 模板、样式、声明和提交清单
-    └── scripts/                 # 数据、复现、图件、论文和可选语料检索工具
+    ├── references/              # 规则、工作流、模型、推导与大纲资料
+    ├── assets/                  # 项目简报模板
+    └── scripts/                 # 数据审计、复现清单、文献发现与阶段检查工具
 ```
 
-本次发布只保留可独立运行的 Skill 运行时。顶层 `论文/` 语料、评测与 fixture、研究/维护文档和脚本、生成的二进制 Word 文件、语料索引均不随远程 `main` 上传；它们仍保留在本地源工作区，便于后续维护。运行时不假定 Skill 旁边存在论文目录，项目结果应写入独立的 `PROJECT_ROOT`。
+本仓库只保留可独立运行的 Skill、评测与构建资源；不包含或依赖实体论文库、论文索引或语料维护脚本。项目结果写入独立的 `PROJECT_ROOT`。
 
 ## 安装到 Codex
 
@@ -50,7 +57,7 @@ ln -s /path/to/cumcm-modeling-skill/cumcm-modeling \
 在该工作区新建任务后即可调用：
 
 ```text
-请使用 $cumcm-modeling 分析我提供的 CUMCM 赛题。先做题面和数据审计，再独立推导候选模型，保留基线并用实际运行结果验证；暂时不要写论文。
+请使用 $cumcm-modeling 分析我提供的 CUMCM 赛题。先做题面和数据审计，再独立推导候选模型，保留基线并用实际运行结果验证；完成计算与事实审查后输出建模交接大纲。
 ```
 
 也可以直接读取 [`cumcm-modeling/SKILL.md`](cumcm-modeling/SKILL.md)。
@@ -63,44 +70,43 @@ ln -s /path/to/cumcm-modeling-skill/cumcm-modeling \
 # 数据结构与字段审计
 python3 cumcm-modeling/scripts/audit_dataset.py PROJECT_ROOT/data/input.xlsx --inspect
 
-# 按显式题号生成 LaTeX 或 Word 可见骨架
-python3 cumcm-modeling/scripts/build/generate_paper_scaffold.py \
-  --profile cumcm --questions N --format tex \
-  --output PROJECT_ROOT/paper/main.tex
+# 项目简报规范检查
+python3 cumcm-modeling/scripts/check_project_brief.py PROJECT_ROOT/modeling-brief.md \
+  --project-root PROJECT_ROOT
 
-# 复现清单与图件终检
+# 复现清单终检
 python3 cumcm-modeling/scripts/check_reproducibility.py \
-  PROJECT_ROOT/results/reproducibility.json --project-root PROJECT_ROOT
-python3 cumcm-modeling/scripts/check_figures.py \
-  PROJECT_ROOT/results/reproducibility.json --project-root PROJECT_ROOT
+  PROJECT_ROOT/results/reproducibility.json --project-root PROJECT_ROOT --require-outputs
 
-# 普通 CUMCM 论文功能覆盖审计
-python3 cumcm-modeling/scripts/check_paper.py PROJECT_ROOT/paper/final.pdf \
-  --profile cumcm --award-style-audit
+# 阶段门禁检查（支持 G1, G2, G3）
+python3 cumcm-modeling/scripts/check_stage.py --stage G3 \
+  --project-root PROJECT_ROOT --expected-questions N
 ```
 
-`N` 必须来自题面中明确的题号；没有显式题号时不要臆造。受控复现默认是 dry-run，只有明确指定运行条目才执行。论文审计是风险提示，不能替代数学、数据、视觉和当届规则的人工复核。
+`N` 必须来自题面中明确的题号；没有显式题号时不要臆造。受控复现默认是 dry-run，只有明确指定运行条目才执行。
 
-需要历史来源时，显式指定外部语料根目录，例如：
+需要外部理论或算法来源时，可使用公开网络检索，或用内置元数据发现脚本生成待核验候选：
 
 ```bash
-python3 cumcm-modeling/scripts/search_corpus.py 调度 \
-  --corpus-root /path/to/CORPUS_ROOT --tag A1R,A1,A1Q,M1,M3 --limit 5
+python3 cumcm-modeling/scripts/search_literature.py "查询词" \
+  --provider crossref --timeout-seconds 5 --retries 0 --json
 ```
 
-语料不可用时，核心 Skill 仍可独立完成；无法由当前题面、推导或实际运行支撑的历史主张必须删除、标记待核验或收窄。
+外部来源不可用时，核心 Skill 仍可独立完成建模；无法由当前题面、推导、实际运行或已核验来源支撑的外部主张必须删除、标记待核验或收窄。
 
 ## 隐私与使用边界
 
-- 本仓库应保持 GitHub **Private**，只授予必要协作者访问权限；README 不能替代仓库可见性设置。
+- 本仓库公开发布 Skill、评测与构建资源；赛题附件、个人数据和项目结果应保存在各自的独立项目目录。
 - 不要提交 API key、OAuth token、个人数据、私有赛题附件、运行日志或项目结果。
 - 本仓库不提供额外开源许可证；在未补充明确许可前，不应将内容视为可自由再分发。
-- 本次远程发布不包含论文原件或论文语料。使用外部资料时仍需自行核对来源、版权和当届竞赛规则。
+- 仓库不包含论文原件或实体论文语料。使用外部资料时仍需核对来源、版权和当届竞赛规则。
 
 ## 入口
 
 - [Skill 入口与任务路由](cumcm-modeling/SKILL.md)
-- [来源治理](cumcm-modeling/references/core/source-governance.md)
 - [建模与模型选择](cumcm-modeling/references/workflow/model-selection.md)
+- [G1-H 人工建模审查](cumcm-modeling/references/workflow/human-modeling-review.md)
+- [G2-H 数据事实审查](cumcm-modeling/references/workflow/g2-human-review.md)
 - [复现与结果事实源](cumcm-modeling/references/workflow/reproducibility.md)
-- [论文写作与交付](cumcm-modeling/references/presentation/cumcm-paper-playbook.md)
+- [G3 建模交接大纲规范](cumcm-modeling/references/workflow/detailed-paper-outline.md)
+- [文献引用验证](cumcm-modeling/references/workflow/literature-verification.md)

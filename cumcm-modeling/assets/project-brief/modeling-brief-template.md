@@ -2,13 +2,11 @@
 
 brief_schema_version: 4
 problem_source: CUMCM
-submission_profile: CUMCM
-profile_basis: <填写：题面、用户交付要求与适用规则的依据；不得留占位。>
 current_gate: G1
 
 ## 题面与交付约束
 
-<填写：记录题面逐问要求、文件类型、页数、匿名、AI 字段、附录与支撑材料约束。>
+<填写：题面逐问要求、必须输出的数值/方案/文件、数据字段、硬约束及用户明确要求。>
 
 ## 任务证据
 

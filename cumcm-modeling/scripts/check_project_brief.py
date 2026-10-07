@@ -17,7 +17,6 @@ REQUIRED_HEADINGS = (
 )
 SCHEMA_VERSION = "4"
 ALLOWED_SOURCES = {"CUMCM", "MCM", "custom"}
-ALLOWED_PROFILES = {"CUMCM", "MCM_NATIVE", "research_report"}
 ALLOWED_GATES = {"G1", "G2", "G3"}
 PLACEHOLDER_MARKERS = ("<填写", "TODO", "TBD", "待填写", "请填写", "按实际填写")
 TOP_FIELD_PATTERN = re.compile(
@@ -29,8 +28,6 @@ VALIDATION_FIELD_NAMES = ("plan", "evidence", "finding")
 PROFILE_FIELD_NAMES = (
     "brief_schema_version",
     "problem_source",
-    "submission_profile",
-    "profile_basis",
     "current_gate",
 )
 HTML_COMMENT_PATTERN = re.compile(r"<!--.*?(?:-->|$)", re.DOTALL)
@@ -202,7 +199,7 @@ def _validate_profile(
     top_fields: dict[str, list[str]],
     required_gate: str | None,
     errors: list[str],
-) -> tuple[str | None, str | None, str | None]:
+) -> tuple[str | None, str | None]:
     for field in PROFILE_FIELD_NAMES:
         values = top_fields.get(field, [])
         if len(values) != 1:
@@ -210,23 +207,16 @@ def _validate_profile(
 
     schema = top_fields.get("brief_schema_version", [None])[0]
     source = top_fields.get("problem_source", [None])[0]
-    profile = top_fields.get("submission_profile", [None])[0]
     gate = top_fields.get("current_gate", [None])[0]
     if schema is not None and schema != "4":
         errors.append(f"字段 brief_schema_version 的值无效：{schema!r}；要求为 4")
     if source is not None and source not in ALLOWED_SOURCES:
         errors.append(f"字段 problem_source 的值无效：{source!r}；允许值为 CUMCM|MCM|custom")
-    if profile is not None and profile not in ALLOWED_PROFILES:
-        errors.append(
-            f"字段 submission_profile 的值无效：{profile!r}；允许值为 CUMCM|MCM_NATIVE|research_report"
-        )
-    basis = top_fields.get("profile_basis", [None])[0]
-    _nonempty_value(basis, "profile_basis", errors)
     if gate is not None and gate not in ALLOWED_GATES:
         errors.append(f"字段 current_gate 的值无效：{gate!r}；允许值为 G1|G2|G3")
     if required_gate and gate in ALLOWED_GATES and gate != required_gate:
         errors.append(f"current_gate={gate} 与要求的 {required_gate} 不一致")
-    return _clean_value(source) or None, _clean_value(profile) or None, _clean_value(gate) or None
+    return _clean_value(source) or None, _clean_value(gate) or None
 
 
 def _validate_tasks(
@@ -295,7 +285,6 @@ def _check_detailed(
     path: Path,
     required_gate: str | None = None,
     *,
-    require_profile_contract: bool = False,
     require_schema: str | None = None,
     project_root: Path | None = None,
     expected_questions: int | None = None,
@@ -303,7 +292,6 @@ def _check_detailed(
     errors: list[str] = []
     warnings: list[str] = []
     metadata: dict[str, object] = {}
-    del require_profile_contract  # Schema 4 always enforces the profile contract.
     if require_schema is not None:
         require_schema = str(require_schema)
         if require_schema != "4":
@@ -328,9 +316,8 @@ def _check_detailed(
     if require_schema == SCHEMA_VERSION and (len(schema_values) != 1 or schema_values[0] != SCHEMA_VERSION):
         errors.append(f"要求 brief_schema_version:{SCHEMA_VERSION}，当前为 {schema_values!r}")
 
-    source, profile, gate = _validate_profile(top_fields, required_gate, errors)
+    source, gate = _validate_profile(top_fields, required_gate, errors)
     metadata["problem_source"] = source
-    metadata["submission_profile"] = profile
     metadata["current_gate"] = gate
 
     for heading in REQUIRED_HEADINGS:
@@ -352,7 +339,6 @@ def check(
     path: Path,
     required_gate: str | None = None,
     *,
-    require_profile_contract: bool = False,
     require_schema: str | None = None,
     project_root: Path | None = None,
     expected_questions: int | None = None,
@@ -362,7 +348,6 @@ def check(
     errors, _, _ = _check_detailed(
         path,
         required_gate,
-        require_profile_contract=require_profile_contract,
         require_schema=require_schema,
         project_root=project_root,
         expected_questions=expected_questions,
@@ -374,11 +359,6 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="检查持久化 CUMCM 项目简报")
     parser.add_argument("brief", type=Path)
     parser.add_argument("--require-gate", choices=("G1", "G2", "G3"))
-    parser.add_argument(
-        "--require-profile-contract",
-        action="store_true",
-        help="要求并校验 Schema 4 的 profile 合同（Schema 4 默认已校验）",
-    )
     parser.add_argument("--require-schema", choices=("4",), help="要求简报使用 Schema 4")
     parser.add_argument("--project-root", type=Path, help="证据路径的项目根目录（默认使用简报所在目录）")
     def positive_integer(value: str) -> int:
@@ -400,7 +380,6 @@ def main() -> int:
     errors, warnings, metadata = _check_detailed(
         args.brief,
         args.require_gate,
-        require_profile_contract=args.require_profile_contract,
         require_schema=args.require_schema,
         project_root=args.project_root,
         expected_questions=args.expected_questions,

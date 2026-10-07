@@ -214,7 +214,7 @@ def main() -> int:
             warnings.append(f"{provider} 失败：{exc}")
     results = deduplicate(results) if args.provider == "both" else results
     network_status = "ok" if successes == len(providers) else ("partial" if successes else "unavailable")
-    fallback_action = "stop_external_retries_and_use_local_evidence" if network_status == "unavailable" else None
+    fallback_action = "stop_external_retries_and_use_verified_evidence" if network_status == "unavailable" else None
     payload = {
         "query": args.query, "provider": args.provider, "results": results,
         "warnings": warnings, "network_status": network_status,
@@ -229,7 +229,7 @@ def main() -> int:
         for warning in warnings:
             print(f"[警告] {warning}", file=sys.stderr)
         if network_status == "unavailable":
-            print("[回退] 停止本轮联网重试，改用题面、Skill 内置蒸馏先验、已核验来源，以及已配置时的外部治理语料；新的外部主张标为待核验。", file=sys.stderr)
+            print("[回退] 停止本轮联网重试，改用题面、Skill 内置蒸馏先验和已核验来源；新的外部主张标为待核验。", file=sys.stderr)
         elif network_status == "partial":
             print("[提示] 某 Provider 失败；保留成功 Provider 的候选，不自动重试，请人工核验。", file=sys.stderr)
     if successes == 0:

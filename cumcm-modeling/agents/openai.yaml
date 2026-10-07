@@ -1,4 +1,4 @@
 interface:
   display_name: "CUMCM 数学建模助手"
-  short_description: "CUMCM赛题分析、模型选择、复现验证、图表与论文辅助"
-  default_prompt: "使用 $cumcm-modeling 分析这道 CUMCM 赛题，形成可复现的解题方案、模型验证与论文计划；仅在最终提交阶段核对当届规则。"
+  short_description: "CUMCM赛题分析、模型选择、复现验证与建模交接"
+  default_prompt: "使用 $cumcm-modeling 分析这道 CUMCM 赛题，形成可复现的解题方案、模型验证与 G3 建模交接大纲；不承担论文成稿、视觉样式或提交排版。"

@@ -9,9 +9,9 @@
 - 在构造后做一次决定性的兼容性或证伪检查，例如回代约束、检查极限/边界、前向重演或小规模对照；不合适时继续独立推导。
 - 不要求 snapshot、schema、artifact、专门术语或持久化审计记录。
 
-## Part A — Modeling Core
+## Modeling Core
 
-建模阶段只读取本部分。每张卡提供 `Use only if`、`Reject / Abstain if`、`Construct`、`Output`、`Validate` 五个快速入口；先扫查适用与不适用条件，再按当前缺口选择构造和验证内容。
+按需读取本部分。每张卡提供 `Use only if`、`Reject / Abstain if`、`Construct`、`Output`、`Validate` 五个快速入口；先扫查适用与不适用条件，再按当前缺口选择构造和验证内容。
 
 ## Pattern 1 — Signed Feasibility Boundary from a Continuous Configuration
 
@@ -91,6 +91,30 @@
 
 > 末尾非激活示例：某些配置、资源或网络情境可能具有耦合自由度；“约束”一词不能激活本卡。
 
+### Search-family parameterization（条件式分支）
+
+#### Use only if
+
+原始优化问题的搜索空间过大或评价昂贵，且存在可解释的结构族、局部扰动或可行修复策略，能够作为一条可验证的搜索路径。
+
+#### Reject / Abstain if
+
+- 没有结构依据说明 `x=Psi(theta)`、扰动、repair 或 swap 为什么覆盖当前风险相关的方案；
+- 把搜索参数化误写成与原问题等价的变量变换，或据此声称覆盖全部原始可行域/得到原问题全局最优；
+- 原始约束和完整目标无法对每个候选回代检查。
+
+#### Construct
+
+构造 `x=Psi(theta)` 作为搜索策略，而非等价变换；说明结构依据、开放自由度、遗漏边界和适用范围。按风险检查明显不同的结构族，或对原变量实施局部 `perturb/repair/swap`，必要时与代理/低分辨率粗搜配合。
+
+#### Output
+
+输出搜索族、参数域、已覆盖结构、已知表示偏差和未覆盖边界；明确不能据此声称原问题全局最优。
+
+#### Validate
+
+每个正式候选都用原始目标与完整硬约束验收；检查不同结构族、原变量局部动作和边界案例是否产生实质差异，并记录搜索不足与停止依据。
+
 ## Pattern 4 — Inverse Formulation from a Generative Observation Map
 
 ### Use only if
@@ -169,36 +193,3 @@
 
 > 末尾非激活示例：某些多尺度、慢快变量或近似计算情境可能呈现此结构；“复杂”一词不能激活本卡。
 
-## Part B — Narrative Bridges
-
-模型正式冻结后才可读取本部分。只读取实际使用 Pattern 对应的 bridge；先从当前题对象、关系和现象重写，再生成正文或图件。bridge 不得反向决定模型，也不能被用于候选生成。
-
-### Pattern 1 bridge
-
-- 先说明当前题中的哪种真实状态分隔了边界，再解释 margin 的符号如何对应两侧状态。
-- Figure trigger：仅当边界几何或两侧状态是认知瓶颈时，绘制能直接消费的对象—边界示意。
-
-### Pattern 2 bridge
-
-- 先叙述状态怎样演化到当前题事件，再解释 guard 如何定位时间或顺序。
-- Figure trigger：仅当时间顺序、跳变或活动区间难以用文字读取时，绘制状态—事件时间线。
-
-### Pattern 3 bridge
-
-- 先说明当前题的真实自由度与耦合约束，再引出可行坐标如何减少重复约束。
-- Figure trigger：仅当可行域或边界分支是认知瓶颈时，绘制当前题的坐标—可行域关系。
-
-### Pattern 4 bridge
-
-- 先写观测在当前题中如何由未知量生成，再说明反演目标和回放证据。
-- Figure trigger：仅当生成链和观测接口是认知瓶颈时，绘制生成—观测—反演链。
-
-### Pattern 5 bridge
-
-- 先解释上游不确定性如何改变当前题的动作、约束或排名，再给出稳定区和切换区。
-- Figure trigger：仅当动作切换或风险区间不能由表格清楚表达时，绘制不确定性—决策关系。
-
-### Pattern 6 bridge
-
-- 先说明当前题的尺度分离和保留的主导机制，再解释约化表示的适用边界。
-- Figure trigger：仅当快慢尺度或删项影响是认知瓶颈时，绘制完整—约化表示对照。
